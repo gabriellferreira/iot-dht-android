@@ -53,8 +53,7 @@ class MainActivity : Activity() {
                 if (dataStr.isNotEmpty()
                         && dataStr.first() == '$'
                         && dataStr.last() == '#') {
-                    dataStr = dataStr.removePrefix("$")
-                    dataStr = dataStr.removeSuffix("#")
+                    dataStr = dataStr.removePrefix("$").removeSuffix("#")
                     val listParameters = dataStr.split("-")
                     if (listParameters.size < 2) return@UsbReadCallback
                     when (listParameters.first()) {
