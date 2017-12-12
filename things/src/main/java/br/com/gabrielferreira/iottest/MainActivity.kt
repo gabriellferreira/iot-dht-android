@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -39,7 +40,10 @@ class MainActivity : Activity() {
     private val humRef by lazy { database.getReference("hum") }
 
     private val tempDisposable by lazy {
-        Observable.interval(1, TimeUnit.SECONDS, Schedulers.io())
+        Observable.interval(5, TimeUnit.SECONDS, Schedulers.io())
+                .timeInterval()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     serial?.write("T#".toByteArray())
                 }
@@ -63,7 +67,7 @@ class MainActivity : Activity() {
                             humRef.setValue(params[1])
                         }
                         "R" -> {
-                            if (listParameters[1] == "T") {
+                            if (listParameters[1] == "true") {
                                 if (!relay_toggle.isEnabled) {
                                     relayToggleRef.setValue(true)
                                 }
